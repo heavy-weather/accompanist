@@ -1,5 +1,6 @@
 <script>
     import jQuery from 'jquery';
+    import { onMount } from 'svelte';
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const qualityMap = {
@@ -13,9 +14,9 @@
     let notes;
     let stepFrequencies;
     let oscillators;
-    let activeNote;
+    let activeNote = 'C4';
     let activeQuality;
-    let activeWaveform;
+    let activeWaveform = 'sawtooth';
 
     jQuery.ajax('/notes440.json').done(retrievedNotes => {
         notes = retrievedNotes;
@@ -23,6 +24,36 @@
     jQuery.ajax('/stepFrequencies440.json').done(retrievedStepFrequencies => {
         stepFrequencies = retrievedStepFrequencies;
     });
+
+    onMount(() => {
+        document.addEventListener('keydown', event => {
+            if (activeNote) {
+                let key = event.key.toUpperCase();
+                if (key && typeof key === 'string') {
+                    if (['A', 'B', 'C', 'D', 'E', 'F', 'G'].includes(key)) {
+                        // Remove enharmonic, set active note
+                        activeNote = activeNote.replace(/[#b]/, '').replace(/[A-G]/, key);
+                    }
+                    if (['#', '@'].includes(key)) {
+                        if (key === '#' && ['C', 'D', 'F', 'G', 'A'].includes(activeNote[0]) ||
+                            key === '@' && ['D', 'E', 'G', 'A', 'B'].includes(activeNote[0])) {
+                            key = key.replace('@', 'b');
+                            if (activeNote.includes('#') || activeNote.includes('b')) {
+                                activeNote = activeNote.replace(/[#b]/, key);
+                            } else {
+                                activeNote = activeNote.slice(0, 1) + key + activeNote.slice(1);
+                            }
+                        }
+                    }
+                    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach(octave => {
+                        if (key === octave) {
+                            activeNote = activeNote.replace(/[-\d]+$/, key);
+                        }
+                    })
+                }
+            }
+        });
+    })
 
     function createOscillators() {
         if (activeQuality) {
@@ -51,7 +82,6 @@
             this.dataset.playing = 'false';
         }
     }
-
 </script>
 
 <style>
