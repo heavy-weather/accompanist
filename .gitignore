@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Front end artifact ###
+src/main/resources/static/index.bundle.js
