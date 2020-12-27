@@ -19,20 +19,18 @@
 
     jQuery.ajax('/notes440.json').done(retrievedNotes => {
         notes = retrievedNotes;
-        jQuery.ajax('/stepFrequencies440.json').done(retrievedStepFrequencies => {
-            stepFrequencies = retrievedStepFrequencies;
-        })
-    })
+    });
+    jQuery.ajax('/stepFrequencies440.json').done(retrievedStepFrequencies => {
+        stepFrequencies = retrievedStepFrequencies;
+    });
 
     function createOscillators() {
         if (activeQuality) {
             const order = notes[activeNote].order;
             oscillators = [];
             for (const step of activeQuality) {
-                const oscillator = audioContext.createOscillator();
                 const frequency = stepFrequencies[order + step]
-                oscillator.type = activeWaveform;
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                const oscillator = new OscillatorNode(audioContext, {type: activeWaveform, frequency});
                 oscillator.connect(audioContext.destination);
                 oscillators.push(oscillator);
             }
