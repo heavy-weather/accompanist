@@ -1,6 +1,9 @@
 <script>
     import jQuery from 'jquery';
     import { onMount } from 'svelte';
+    import notesMapStore from "./stores/notesMapStore";
+    import activeNoteStore from "./stores/activeNoteStore";
+    import audioContextStore from "./stores/audioContextStore";
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const qualityMap = {
@@ -11,43 +14,58 @@
     }
     const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
 
-    let notes;
+    let notesMap;
     let stepFrequencies;
     let oscillators;
-    let activeNote = 'C4';
+    let activeNote;
     let activeQuality;
     let activeWaveform = 'sawtooth';
 
     jQuery.ajax('/notes440.json').done(retrievedNotes => {
-        notes = retrievedNotes;
+        notesMap = retrievedNotes;
     });
     jQuery.ajax('/stepFrequencies440.json').done(retrievedStepFrequencies => {
         stepFrequencies = retrievedStepFrequencies;
     });
 
+    audioContextStore.set(audioContext);
+    activeNoteStore.subscribe(note => {
+        activeNote = note;
+    })
+    $: (function() {
+        if (notesMap && stepFrequencies) {
+            notesMapStore.set({
+                notesMap,
+                stepFrequencies
+            })
+        }
+    })();
+
     onMount(() => {
         document.addEventListener('keydown', event => {
             if (activeNote) {
-                let key = event.key.toUpperCase();
+                let key = event.key;
                 if (key && typeof key === 'string') {
+                    key = key.toUpperCase();
                     if (['A', 'B', 'C', 'D', 'E', 'F', 'G'].includes(key)) {
-                        // Remove enharmonic, set active note
-                        activeNote = activeNote.replace(/[#b]/, '').replace(/[A-G]/, key);
+                        // Remove enharmonic, makes it possible to set natural
+                        // note when enharmonic set
+                        activeNoteStore.set(activeNote.replace(/[#b]/, '').replace(/[A-G]/, key));
                     }
                     if (['#', '@'].includes(key)) {
                         if (key === '#' && ['C', 'D', 'F', 'G', 'A'].includes(activeNote[0]) ||
                             key === '@' && ['D', 'E', 'G', 'A', 'B'].includes(activeNote[0])) {
                             key = key.replace('@', 'b');
                             if (activeNote.includes('#') || activeNote.includes('b')) {
-                                activeNote = activeNote.replace(/[#b]/, key);
+                                activeNoteStore.set(activeNote.replace(/[#b]/, key));
                             } else {
-                                activeNote = activeNote.slice(0, 1) + key + activeNote.slice(1);
+                                activeNoteStore.set(activeNote.slice(0, 1) + key + activeNote.slice(1));
                             }
                         }
                     }
                     ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach(octave => {
                         if (key === octave) {
-                            activeNote = activeNote.replace(/[-\d]+$/, key);
+                            activeNoteStore.set(activeNote.replace(/[-\d]+$/, key));
                         }
                     })
                 }
@@ -57,7 +75,7 @@
 
     function createOscillators() {
         if (activeQuality) {
-            const order = notes[activeNote].order;
+            const order = notesMap[activeNote].order;
             oscillators = [];
             for (const step of activeQuality) {
                 const frequency = stepFrequencies[order + step]
@@ -88,9 +106,9 @@
     @import "webjars/bootstrap/4.5.3/css/bootstrap.css";
 </style>
 
-{#if notes && stepFrequencies}
-<select bind:value={activeNote}>
-    {#each Object.keys(notes) as noteName}
+{#if notesMap && stepFrequencies}
+<select on:change={e => activeNoteStore.set(e.target.value)} value={activeNote}>
+    {#each Object.keys(notesMap) as noteName}
     <option value={noteName}>{noteName}</option>
     {/each}
 </select>
