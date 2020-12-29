@@ -67,7 +67,7 @@
                 }
             }
         });
-    })()
+    });
 
     function createOscillators() {
         if (activeQuality) {
@@ -144,7 +144,7 @@
 {#if showHelpModal}
 <div class="position-absolute w-100 h-100 d-flex p-3" style="background:rgba(0,0,0,0.3);">
     <div class="flex-grow-1 bg-white p-4">
-        <div class="d-flex justify-content-between w-100">
+        <div class="d-flex justify-content-between align-items-start w-100">
             <h4>Help</h4>
             <i class="fas fa-times-circle text-dark cursor-pointer"
                style="font-size:1.3rem;"
