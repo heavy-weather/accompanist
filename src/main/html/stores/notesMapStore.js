@@ -1,13 +1,13 @@
 import { writable } from "svelte/store";
-const { set, subscribe, unsubscribe } = writable();
+const { set, subscribe } = writable();
 
 function createNotesMapStore() {
     let notesMap;
-    let stepFrequencies;
+    let frequencyList;
 
     function setWrapper(config) {
         notesMap = config.notesMap;
-        stepFrequencies = config.stepFrequencies;
+        frequencyList = config.frequencyList;
         set(config);
     }
 
@@ -15,8 +15,7 @@ function createNotesMapStore() {
         set: setWrapper,
         notesMap,
         stepFrequencies,
-        subscribe,
-        unsubscribe
+        subscribe
     }
 }
 

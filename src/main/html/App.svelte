@@ -21,11 +21,9 @@
     let activeQuality;
     let activeWaveform = 'sawtooth';
 
-    jQuery.ajax('/notes440.json').done(retrievedNotes => {
-        notesMap = retrievedNotes;
-    });
-    jQuery.ajax('/stepFrequencies440.json').done(retrievedStepFrequencies => {
-        stepFrequencies = retrievedStepFrequencies;
+    jQuery.ajax('/notes/TWELVE_440.json').done(retrievedNotes => {
+        notesMap = retrievedNotes.notes;
+        stepFrequencies = retrievedNotes.frequencyList;
     });
 
     audioContextStore.set(audioContext);
@@ -106,21 +104,36 @@
     @import "webjars/bootstrap/4.5.3/css/bootstrap.css";
 </style>
 
-{#if notesMap && stepFrequencies}
-<select on:change={e => activeNoteStore.set(e.target.value)} value={activeNote}>
-    {#each Object.keys(notesMap) as noteName}
-    <option value={noteName}>{noteName}</option>
-    {/each}
-</select>
-<select bind:value={activeQuality}>
-    {#each Object.keys(qualityMap) as qual}
-    <option value={qualityMap[qual]}>{qual}</option>
-    {/each}
-</select>
-<select bind:value={activeWaveform}>
-    {#each waveforms as waveform}
-    <option>{waveform}</option>
-    {/each}
-</select>
-<button id="play" data-playing="false" on:click={play}>Play/Pause</button>
-{/if}
+<nav class="d-flex w-100 position-fixed justify-content-between align-items-center px-2" style="height:3rem;top:0;">
+    <div class="d-flex align-items-center">
+        {#if notesMap && stepFrequencies}
+        <select class="form-control form-control-sm mr-2"
+                style="max-width:4rem;"
+                on:change={e => activeNoteStore.set(e.target.value)}
+                value={activeNote}>
+            {#each Object.keys(notesMap) as noteName}
+                <option value={noteName}>{noteName}</option>
+            {/each}
+        </select>
+        <select class="form-control form-control-sm mr-2" style="max-width:7rem;" bind:value={activeQuality}>
+            {#each Object.keys(qualityMap) as qual}
+                <option value={qualityMap[qual]}>{qual}</option>
+            {/each}
+        </select>
+        <select class="form-control form-control-sm mr-2" style="max-width:7rem;" bind:value={activeWaveform}>
+            {#each waveforms as waveform}
+                <option>{waveform}</option>
+            {/each}
+        </select>
+        <button id="play" class="btn btn-sm btn-success" data-playing="false" on:click={play}>Play/Pause</button>
+        {/if}
+    </div>
+    <div class="d-flex align-items-center justify-content-end">
+
+    </div>
+</nav>
+<div class="p-3 mt-5 flex-grow-1">
+    <div class="d-flex align-items-center">
+
+    </div>
+</div>
