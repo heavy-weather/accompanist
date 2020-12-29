@@ -14,7 +14,7 @@ function createNotesMapStore() {
     return {
         set: setWrapper,
         notesMap,
-        stepFrequencies,
+        frequencyList,
         subscribe
     }
 }

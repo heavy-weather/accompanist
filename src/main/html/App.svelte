@@ -15,7 +15,7 @@
     const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
 
     let notesMap;
-    let stepFrequencies;
+    let frequencyList;
     let oscillators;
     let activeNote;
     let activeQuality;
@@ -23,21 +23,14 @@
 
     jQuery.ajax('/notes/TWELVE_440.json').done(retrievedNotes => {
         notesMap = retrievedNotes.notes;
-        stepFrequencies = retrievedNotes.frequencyList;
+        frequencyList = retrievedNotes.frequencyList;
+        notesMapStore.set(retrievedNotes);
     });
 
     audioContextStore.set(audioContext);
     activeNoteStore.subscribe(note => {
         activeNote = note;
-    })
-    $: (function() {
-        if (notesMap && stepFrequencies) {
-            notesMapStore.set({
-                notesMap,
-                stepFrequencies
-            })
-        }
-    })();
+    });
 
     onMount(() => {
         document.addEventListener('keydown', event => {
@@ -76,7 +69,7 @@
             const order = notesMap[activeNote].order;
             oscillators = [];
             for (const step of activeQuality) {
-                const frequency = stepFrequencies[order + step]
+                const frequency = frequencyList[order + step]
                 const oscillator = new OscillatorNode(audioContext, {type: activeWaveform, frequency});
                 oscillator.connect(audioContext.destination);
                 oscillators.push(oscillator);
@@ -106,7 +99,7 @@
 
 <nav class="d-flex w-100 position-fixed justify-content-between align-items-center px-2" style="height:3rem;top:0;">
     <div class="d-flex align-items-center">
-        {#if notesMap && stepFrequencies}
+        {#if notesMap && frequencyList}
         <select class="form-control form-control-sm mr-2"
                 style="max-width:4rem;"
                 on:change={e => activeNoteStore.set(e.target.value)}
