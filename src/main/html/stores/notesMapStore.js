@@ -4,10 +4,12 @@ const { set, subscribe } = writable();
 function createNotesMapStore() {
     let notesMap;
     let frequencyList;
+    let noteOrder;
 
     function setWrapper(config) {
         notesMap = config.notesMap;
         frequencyList = config.frequencyList;
+        noteOrder = config.noteOrder;
         set(config);
     }
 
@@ -15,6 +17,7 @@ function createNotesMapStore() {
         set: setWrapper,
         notesMap,
         frequencyList,
+        noteOrder,
         subscribe
     }
 }

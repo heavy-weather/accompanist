@@ -16,6 +16,7 @@
 
     let notesMap;
     let frequencyList;
+    let noteOrder;
     let oscillators;
     let activeNote;
     let activeQuality;
@@ -24,6 +25,7 @@
     jQuery.ajax('/notes/TWELVE_440.json').done(retrievedNotes => {
         notesMap = retrievedNotes.notes;
         frequencyList = retrievedNotes.frequencyList;
+        noteOrder = retrievedNotes.noteOrder;
         notesMapStore.set(retrievedNotes);
     });
 
@@ -101,10 +103,10 @@
     <div class="d-flex align-items-center">
         {#if notesMap && frequencyList}
         <select class="form-control form-control-sm mr-2"
-                style="max-width:4rem;"
+                style="max-width:5rem;"
                 on:change={e => activeNoteStore.set(e.target.value)}
                 value={activeNote}>
-            {#each Object.keys(notesMap) as noteName}
+            {#each noteOrder as noteName}
                 <option value={noteName}>{noteName}</option>
             {/each}
         </select>

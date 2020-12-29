@@ -54,6 +54,7 @@ public class NoteService {
         NoteMap noteMap = new NoteMap();
         noteMap.setNotes(new HashMap<>());
         noteMap.setFrequencyList(new ArrayList<>());
+        noteMap.setNoteOrder(new ArrayList<>());
 
         int order = 0;
         int currentOctave = startingOctave;
@@ -72,7 +73,9 @@ public class NoteService {
 
                 for (String noteName : noteNames[i]) {
                     Note note = new Note(roundedFrequency.doubleValue(), order);
-                    noteMap.getNotes().put(noteName + currentOctave, note);
+                    String nameWithOctave = noteName + currentOctave;
+                    noteMap.getNotes().put(nameWithOctave, note);
+                    noteMap.getNoteOrder().add(nameWithOctave);
                 }
                 noteMap.getFrequencyList().add(roundedFrequency.doubleValue());
 
