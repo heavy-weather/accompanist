@@ -13,6 +13,7 @@
         Augmented: [0, 4, 8]
     }
     const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
+    const tuningName = 'TWELVE_440';
 
     let notesMap;
     let frequencyList;
@@ -23,7 +24,7 @@
     let activeWaveform = 'sawtooth';
     let showHelpModal = false;
 
-    jQuery.ajax('/notes/TWELVE_440.json').done(retrievedNotes => {
+    jQuery.ajax(`/tunings/${tuningName}`).done(retrievedNotes => {
         notesMap = retrievedNotes.notes;
         frequencyList = retrievedNotes.frequencyList;
         noteOrder = retrievedNotes.noteOrder;
@@ -62,8 +63,7 @@
                         if (key === octave) {
                             activeNoteStore.set(activeNote.replace(/[-\d]+$/, key));
                         }
-                    })
-                    console.debug(activeNote);
+                    });
                 }
             }
         });
@@ -75,9 +75,11 @@
             oscillators = [];
             for (const step of activeQuality) {
                 const frequency = frequencyList[order + step]
-                const oscillator = new OscillatorNode(audioContext, {type: activeWaveform, frequency});
-                oscillator.connect(audioContext.destination);
-                oscillators.push(oscillator);
+                if (frequency <= frequencyList[frequencyList.length - 1] && frequency >= frequencyList[0]) {
+                    const oscillator = new OscillatorNode(audioContext, {type: activeWaveform, frequency});
+                    oscillator.connect(audioContext.destination);
+                    oscillators.push(oscillator);
+                }
             }
         }
 
@@ -128,8 +130,9 @@
         <button id="play" class="btn btn-sm btn-success" data-playing="false" on:click={play}>Play/Pause</button>
         {/if}
     </div>
-    <div class="d-flex align-items-center justify-content-end">
-        <i class="fas fa-question-circle text-dark mr-2 cursor-pointer"
+    <div class="d-flex align-items-center justify-content-between">
+        <h5 class="mr-3 mb-0">Accompanist</h5>
+        <i class="fas fa-question-circle mr-2 cursor-pointer"
            style="font-size:1.3rem;"
            on:click={() => showHelpModal = true}></i>
     </div>

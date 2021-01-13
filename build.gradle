@@ -13,12 +13,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	compile 'org.webjars:bootstrap:4.5.3'
-	compile 'org.webjars:font-awesome:5.15.1'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.mongodb:mongodb-driver-sync:4.1.1'
+	implementation 'org.webjars:bootstrap:4.5.3'
+	implementation 'org.webjars:font-awesome:5.15.1'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
