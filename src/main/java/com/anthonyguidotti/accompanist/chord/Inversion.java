@@ -2,7 +2,7 @@ package com.anthonyguidotti.accompanist.chord;
 
 import org.bson.types.ObjectId;
 
-public class ChordType {
+public class Inversion {
     private ObjectId id;
     private String name;
     private int[] criteria;

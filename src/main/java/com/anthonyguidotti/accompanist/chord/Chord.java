@@ -9,7 +9,8 @@ public class Chord {
     private String name;
     private int[] requiredSteps;
     private int[] optionalSteps;
-    private List<ChordType> types;
+    private List<Inversion> inversions;
+    private String tuning;
 
     public ObjectId getId() {
         return id;
@@ -43,11 +44,19 @@ public class Chord {
         this.optionalSteps = optionalSteps;
     }
 
-    public List<ChordType> getTypes() {
-        return types;
+    public List<Inversion> getInversions() {
+        return inversions;
     }
 
-    public void setTypes(List<ChordType> types) {
-        this.types = types;
+    public void setInversions(List<Inversion> inversions) {
+        this.inversions = inversions;
+    }
+
+    public String getTuning() {
+        return tuning;
+    }
+
+    public void setTuning(String tuning) {
+        this.tuning = tuning;
     }
 }

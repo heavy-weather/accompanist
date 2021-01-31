@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VoicingDataAccess {
-    private final MongoCollection<Voicing> collection;
+    private final MongoCollection<ChordVoicing> collection;
 
     public VoicingDataAccess(
             MongoDatabase database
     ) {
-        this.collection = database.getCollection("voicing", Voicing.class);
+        this.collection = database.getCollection("voicing", ChordVoicing.class);
     }
 }

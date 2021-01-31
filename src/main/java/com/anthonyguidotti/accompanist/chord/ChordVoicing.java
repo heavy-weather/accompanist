@@ -2,7 +2,7 @@ package com.anthonyguidotti.accompanist.chord;
 
 import org.bson.types.ObjectId;
 
-public class Voicing {
+public class ChordVoicing {
     private ObjectId id;
     private ObjectId chordTypeId;
     private Instrument instrument;
