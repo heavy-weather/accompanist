@@ -4,8 +4,10 @@ import org.bson.types.ObjectId;
 
 public class ChordVoicing {
     private ObjectId id;
-    private ObjectId chordTypeId;
-    private Instrument instrument;
+    private ObjectId inversionId;
+    private String chordName;
+    private String inversionName;
+    private String instrument;
     private int[] voices;
 
     public ObjectId getId() {
@@ -16,19 +18,35 @@ public class ChordVoicing {
         this.id = id;
     }
 
-    public ObjectId getChordTypeId() {
-        return chordTypeId;
+    public ObjectId getInversionId() {
+        return inversionId;
     }
 
-    public void setChordTypeId(ObjectId chordTypeId) {
-        this.chordTypeId = chordTypeId;
+    public void setInversionId(ObjectId inversionId) {
+        this.inversionId = inversionId;
     }
 
-    public Instrument getInstrument() {
+    public String getChordName() {
+        return chordName;
+    }
+
+    public void setChordName(String chordName) {
+        this.chordName = chordName;
+    }
+
+    public String getInversionName() {
+        return inversionName;
+    }
+
+    public void setInversionName(String inversionName) {
+        this.inversionName = inversionName;
+    }
+
+    public String getInstrument() {
         return instrument;
     }
 
-    public void setInstrument(Instrument instrument) {
+    public void setInstrument(String instrument) {
         this.instrument = instrument;
     }
 
